@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Upcoming Codeforces Contests</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			var progressBar = $('<div class="progress-bar"><div class="progress"></div></div>').appendTo('body');
+			$.ajax({
+				url: "https://codeforces.com/api/contest.list",
+				method: "GET",
+				beforeSend: function() {
+					progressBar.show();
+				},
+				complete: function() {
+					progressBar.hide();
+				},
+				success: function(data){
+					var contests = data.result;
+					var table = "<table><tr><th>Name</th><th>Date</th><th>Duration</th></tr>";
+					for(var i = 0; i < contests.length; i++){
+						if(contests[i].phase === "BEFORE"){
+							table += "<tr><td>" + contests[i].name + "</td><td>" + new Date(contests[i].startTimeSeconds * 1000).toLocaleString() + "</td><td>" + contests[i].durationSeconds / 3600 + " hours</td></tr>";
+						}
+					}
+					table += "</table>";
+					$("#contests").html(table);
+				},
+				error: function(){
+					$("#contests").html("Error fetching contests");
+				}
+			});
+		});
+	</script>
+	<style>
+		table{
+			border-collapse: collapse;
+			width: 100%;
+			margin-top: 50px;
+		}
+		th, td{
+			text-align: left;
+			padding: 8px;
+			border-bottom: 1px solid #ddd;
+		}
+		tr:hover{
+			background-color: #f5f5f5;
+		}
+		th{
+			background-color: #4CAF50;
+			color: white;
+		}
+		.progress-bar{
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 2px;
+			background-color: #007bff;
+			z-index: 9999;
+		}
+		.progress{
+			width: 0%;
+			height: 100%;
+			background-color: #007bff;
+		}
+    table {
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+  background-color: #f1f1f1;
+}
+
+thead th {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+td {
+  padding: 8px;
+}
+
+footer {
+  background-color: #f5f5f5;
+  padding: 20px 0;
+}
+
+footer p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+  padding: 0;
+}
+
+	</style>
+</head>
+<body>
+	<h1>Upcoming Codeforces Contests</h1>
+	<div id="contests"></div>
+
+  <br>
+	<footer>
+	  <div class="container">
+	    <div class="row">
+	      <div class="col-md-12 text-center">
+	        <p>&copy; 2023 Amit Maity. All rights reserved.</p>
+	      </div>
+	    </div>
+	  </div>
+	</footer>
+
+</body>
+</html>
